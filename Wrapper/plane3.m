@@ -22,10 +22,12 @@ if( nargin < 3 )
     B = [];
 end
 if( isempty(B) )
-    N = T;
-    T = normr([N(:,2) -N(:,1) N(:,3)]);
-    B = normr(cross( N, T, 2 ));
-    T = normr(cross( N, B, 2 ));
+    F = eye(3);
+    R = reshape(RUt(normr(cross([0 0 1],T,2)),dot([0 0 1],T,2)),3,3);
+    F = R*F;
+    T = F(:,1)';
+    B = F(:,2)';
+
 end
 T = side * T;
 B = side * B;
