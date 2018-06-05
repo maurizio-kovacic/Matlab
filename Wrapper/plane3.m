@@ -28,7 +28,7 @@ if( isempty(B) )
     i      = find(an>0);
     if( ~isempty(i) )
         R(i) = squeeze(num2cell(axang2rotm([normr(cross(repmat([0 0 1],numel(i),1),T(i,:),2)) an(i,:)]),[1 2]));
-        F    = R.*F;
+        F    = cellfun(@mtimes,R,F,'UniformOutput',false);
     end
     F      = cell2mat(cellfun(@(M) M(1:9),F,'UniformOutput',false));
     T      = F(:,1:3);
