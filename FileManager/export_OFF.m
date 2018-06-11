@@ -4,6 +4,7 @@ formatS = '%u %u %u\n';
 formatP = '%f %f %f\n';
 formatT = '';
 formatE = '%u %u\n';
+T = T - ones(size(T));
 if( size(T,2) == 3 )
     [I,J,K] = tri2ind(T);
     E = unique(sort([I J; J K; K I],2),'rows');
@@ -17,7 +18,7 @@ end
 H = 'OFF';
 S = [size(P,1) size(T,1) size(E,1)];
 
-fileID = fopen(strcat(filename,'.off'),'w');
+fileID = fopen(strcat(filename,'.off'),'wt');
 fprintf( fileID, formatH, H  );
 fprintf( fileID, formatS, S' );
 fprintf( fileID, formatP, P' );

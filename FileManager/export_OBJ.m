@@ -4,7 +4,7 @@ formatN = 'vn %f %f %f\n';
 formatUV = 'vt %f %f\n';
 hasN  = false;
 hasUV = false;
-fileID = fopen(strcat(filename,'.obj'),'w');
+fileID = fopen(strcat(filename,'.obj'),'wt');
 fprintf( fileID, formatV, V' );
 if( size(N,1) > 0 )
     hasN = true;
