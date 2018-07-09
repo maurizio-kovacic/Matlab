@@ -1,8 +1,15 @@
-function [fig] = CreateAnimation3D(Skin,Anim)
+function [fig] = CreateAnimation3D(Skin,Anim,type)
 clear SkinningStep;
+if( nargin < 3 )
+    type = 'CPS';
+end
+if( ~strcmp(upper(type),'CPS') && ~strcmp(upper(type),'LBS') && ~strcmp(upper(type),'DIV') )
+    type = 'CPS';
+end
 
 fig = CreateViewer3D('right');
-ptc = display_mesh(Skin.M.P,Skin.M.N,Skin.M.S);
+fig.Name = type;
+display_mesh(Skin.M.P,Skin.M.N,Skin.M.S);
 
 frame = uicontrol( fig,...
     'Style', 'slider',...
@@ -12,7 +19,7 @@ frame = uicontrol( fig,...
     'SliderStep', [0.01 0.1],...
     'Value', 1);
 addlistener( frame, 'ContinuousValueChange',...
-             @(src,event) SkinningStep(ptc,Skin,Anim{floor(src.Value)}) );
+             @(src,event) SkinningStep(fig,Skin,Anim{floor(src.Value)},type) );
 
 end
 

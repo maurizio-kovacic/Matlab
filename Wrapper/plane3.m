@@ -22,12 +22,13 @@ if( nargin < 3 )
     B = [];
 end
 if( isempty(B) )
-    an     = acos(dot(repmat([0 0 1],size(T,1),1),T,2));
+    an     = acos(dot(repmat([0 0 1],size(T,1),1),normr(T),2));
     F      = repmat({eye(3)},size(P,1),1);
     R      = F;
     i      = find(an>0);
     if( ~isempty(i) )
-        R(i) = squeeze(num2cell(axang2rotm([normr(cross(repmat([0 0 1],numel(i),1),T(i,:),2)) an(i,:)]),[1 2]));
+%         R(i) = squeeze(num2cell(axang2rotm([normr(cross(repmat([0 0 1],numel(i),1),T(i,:),2)) an(i,:)]),[1 2]));
+        R(i) = squeeze(num2cell(axang2rotm([(cross(repmat([0 0 1],numel(i),1),T(i,:),2)) an(i,:)]),[1 2]));
         F    = cellfun(@mtimes,R,F,'UniformOutput',false);
     end
     F      = cell2mat(cellfun(@(M) M(1:9),F,'UniformOutput',false));

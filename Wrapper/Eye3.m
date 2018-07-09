@@ -1,3 +1,6 @@
-function [I] = Eye3()
-I = [ 1 0 0 0 0 1 0 0 0 0 1 0 ];
+function [I] = Eye3(n)
+if( nargin < 1 )
+    n = 1;
+end
+I = repmat([ 1 0 0 0 0 1 0 0 0 0 1 0 ],n,1);
 end

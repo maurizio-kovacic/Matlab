@@ -5,6 +5,10 @@ end
 if( nargin < 5 )
     primitiveMode = 'face'; % point/vertex, wireframe, wired, face
 end
+if( isempty(T) )
+    primitiveMode = 'vertex';
+end
+
 primitiveMode = lower(primitiveMode);
 
 if( nargin < 4 )
@@ -16,11 +20,20 @@ if( ~isempty(C) )
     M.SpecularStrength         = 0;
     M.SpecularColorReflectance = 0;
     M.SpecularExponent         = 1;
+else
+    M.Alpha                    = 1;
+    M.SpecularStrength         = 0.3;
+    M.SpecularColorReflectance = 0.5;
+    M.SpecularExponent         = 100;
 end
 
-fig = patch( 'Faces',T,'Vertices',P,...
+if( isempty(C) )
+    C = mesh_color(P,T,M.Color);
+end
+
+fig = patch( 'Faces',full(T),'Vertices',full(P),...
              'EdgeColor', 'none',...
-             'VertexNormals', N,...
+             'VertexNormals', full(N),...
              'FaceLighting', 'gouraud', ...
              'FaceColor',                 M.Color,...
              'FaceAlpha',                 M.Alpha,...
@@ -30,15 +43,19 @@ fig = patch( 'Faces',T,'Vertices',P,...
              'SpecularColorReflectance',  M.SpecularColorReflectance,...
              'SpecularExponent',          M.SpecularExponent,...
              'BackFaceLighting', 'lit' );
+         
+% ax = get(fig,'Parent');
+% D  = clamp(dot(N,repmat(normr(ax.CameraPosition-ax.CameraTarget),row(P),1),2),0,1)*0.8+0.2;
+% C  = C.*D;
 
 if( ~isempty(C) )
     if( issparse(C) )
         C = full(C);
     end
     if( islogical(C) )
-        C= double(C);
+        C = double(C);
     end
-    C(isinf(C)) = NaN;
+    C(~isfinite(C)) = NaN;
     A = ones(size(C,1),1);
     if( size(C,2) == 4 )
         A = C(:,4);
