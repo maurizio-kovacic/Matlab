@@ -10,7 +10,7 @@ if( nargin < 2 )
 end
 if( isoline )
     delta = 16;
-    C = repelem(color_gradient(CData,10,varargin{:}),delta,1);
+    C = repelem(color_gradient(CData,20,varargin{:}),delta,1);
     i = setdiff((1:delta:row(C))',[1,row(C)]);
     C(i,:) = repmat(CIso,numel(i),1);
 else
