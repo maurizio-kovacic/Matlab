@@ -28,12 +28,12 @@ I = find( ( z <= 0.0001 ) &...
           ( t2 <= 1 ) );
 X(I,:) = A(I,:) + t2(I,:) .* E2(I,:);
 if( nargout > 1 )
-%     t1( t1 < 0 ) = NaN;
+    t1( t1 < 0 ) = NaN;
     varargout{1} = t1;
 end
 if( nargout > 2 )
-%     t2( t2 < 0 ) = NaN;
-%     t2( t2 > 1 ) = NaN;
+    t2( t2 < 0 ) = NaN;
+    t2( t2 > 1 ) = NaN;
     varargout{2} = t2;
 end
 if( nargout > 3 )
