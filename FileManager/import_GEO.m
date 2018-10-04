@@ -5,7 +5,7 @@ formatUV = 'uv %f %f\n';
 formatT  = 't %u %u %u\n';
 formatV  = 'v %u %u\n'; %id h
 formatH  = 'h %u %u %u %u %u\n'; %id v f next prev
-formatE  = 'e %u %u\n'; %id h
+formatE  = 'e %u\n'; %h
 formatF  = 'f %u %u\n'; %id h
 
 fileID = fopen(strcat(filename,'.geo'),'r');
@@ -21,10 +21,16 @@ if( nargout >= 6 )
     varargout{2} = fscanf( fileID, formatH,  [5 Inf] )';
 end
 if( nargout >= 7 )
-    varargout{3} = fscanf( fileID, formatE,  [2 Inf] )';
+    varargout{3} = fscanf( fileID, formatE,  [1 Inf] )'*2;
 end
 if( nargout >= 8 )
     varargout{4} = fscanf( fileID, formatF,  [2 Inf] )';
+end
+if( nargout > 4 )
+    for i = nargout-4 : nargout
+        varargout{i}(varargout{i}==intmax('uint32')) = -1;
+        varargout{i} = varargout{i}+1;
+    end
 end
 
 fclose(fileID);

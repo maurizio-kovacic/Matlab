@@ -4,7 +4,7 @@ formatF  = 'f %f %f %f\n';
 formatFS = 's %u %u %u\n';
 formatD  = 'd %f %f %f\n';
 formatP  = 'p %f %f %f\n';
-fileID = fopen(strcat(filename,'.skn'),'r');
+fileID = fopen(strcat(filename,'.skn'),'rt');
 T  = fscanf( fileID, formatT,  [3 Inf] )';
 W  = sparse( T(:,1), T(:,2), T(:,3), max(T(:,1)), max(T(:,2)) );
 

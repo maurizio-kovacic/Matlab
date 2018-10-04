@@ -19,8 +19,9 @@ data(cellfun(func_c,data)) = [];
 % search vertex
 i = find( cellfun(func_v,data) );
 if( ~isempty(i) )
-    txt = strjoin(data(i),'\n');
-    P   = sscanf(txt,'v %f %f %f\n',[3 Inf])';
+    P = cellfun(@(c) string(strsplit(c)),data(i),'UniformOutput',false);
+    P = cellfun(@(c) str2num(str2mat(c(2:4)))',P,'UniformOutput',false);
+    P = cell2mat(P);
     data(i) = [];
 end
 
@@ -68,52 +69,9 @@ split_space = @(s) strsplit( s, ' ' );
 split_slash = @(s) strsplit( s, '/' );
 extract = @(s) s{1};
 convert = @(s) str2double(s);
-token = split_space(txt);
-i = convert(extract(split_slash(token{1})));
-j = convert(extract(split_slash(token{2})));
-k = convert(extract(split_slash(token{3})));
-T = [i,j,k];
+token = erase_empty(split_space(txt));
+T = [];
+for i = 1 : numel(token)
+    T = [T,convert(extract(split_slash(token{i})))];
 end
-
-% function [ P, N, UV, T ] = import_OBJ( filename )
-% fileID = fopen(strcat(filename,'.obj'),'r');
-% line   = fgetl(fileID);
-% P  = [];
-% N  = [];
-% UV = [];
-% T  = [];
-% while(ischar(line))
-%     token = line(1);
-%     if( ~strcmp( token, '#' ) )
-%         token = strsplit(line);
-%         if( strcmp( token{1}, 'v' ) )
-%             x = str2double(token{2});
-%             y = str2double(token{3});
-%             z = str2double(token{4});
-%             P = [P; x,y,z];
-%         end
-%         if( strcmp( token{1}, 'vt' ) )
-%             u = str2double(token{2});
-%             v = str2double(token{3});
-%             UV = [UV; u,v];
-%         end
-%         if( strcmp( token{1}, 'vn' ) )
-%             x = str2double(token{2});
-%             y = str2double(token{3});
-%             z = str2double(token{4});
-%             N = [N; x,y,z];
-%         end
-%         if( strcmp( token{1}, 'f' ) )
-%             split = @(s) strsplit( s, '/' );
-%             extract = @(s) s{1};
-%             convert = @(s) str2double(s);
-%             i = convert(extract(split(token{2})));
-%             j = convert(extract(split(token{3})));
-%             k = convert(extract(split(token{4})));
-%             T = [T; i,j,k];
-%         end
-%     end
-%     line = fgetl(fileID);
-% end
-% fclose(fileID);
-% end
+end
