@@ -1,5 +1,5 @@
 function [ax] = CreateAxes3D(h)
-if( nargin == 0 )
+if( nargin == 0 || isempty(h) )
     h = axes;
 end
 NA = {'Color',...

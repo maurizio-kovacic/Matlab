@@ -1,4 +1,7 @@
-function HeatDiffusionViewer3D(P,N,T)
+function [U] = HeatDiffusionViewer3D(P,N,T,i)
+if( nargin < 4 )
+    i = [];
+end
 fig  = CreateViewer3D('Name','Heat Diffusion Viewer','right');
 mesh = display_mesh(P,N,T,[0.5 0.5 0.5]);
 cmap('king',256);
@@ -12,18 +15,41 @@ slider = uicontrol( fig,...
     'SliderStep', [0.001 0.1],...
     'Value', 0.1);
 addlistener( slider, 'ContinuousValueChange',...
-             @(object,event) heat_diffusion_field(mesh,[],P,T,slider.Value) );
-
-set(mesh,'ButtonDownFcn',@(object,event) heat_diffusion_field(object,event,P,T,slider.Value));
+             @(object,event) heat_diffusion_field(mesh,[],P,T,i,slider.Value) );
+set(fig,'DeleteFcn',@(object,event) heat_diffusion_field());
+set(mesh,'ButtonDownFcn',@(object,event) heat_diffusion_field(object,event,P,T,i,slider.Value));
+keep = true;
+while( keep )
+    if( ~isvalid(fig) )
+        break;
+    end
+    char = get(fig, 'CurrentCharacter');
+    if( char == 13 )
+        keep = false;
+    end
+    drawnow;
+end
+if( isvalid(mesh) )
+    set(mesh,'ButtonDownFcn',[]);
+    U = mesh.FaceVertexCData;
+end
+if( isvalid(fig) )
+    close(fig);
+end
 end
 
-function heat_diffusion_field(object,event,P,T,diffusion_time)
+function heat_diffusion_field(object,event,P,T,ID,diffusion_time)
+persistent KDTree;
 persistent i;
 persistent Pi;
-persistent A;
-persistent L;
-persistent t;
-persistent AtL;
+persistent A L t AtL;
+if(nargin==0)
+    clear i Pi A L t AtL KDTree;
+    return;
+end
+if( isempty(KDTree) )
+    KDTree = KDTreeSearcher(P);
+end
 if( isempty(A) )
     A = barycentric_area(P,T);
 end
@@ -37,10 +63,13 @@ if( t ~= diffusion_time )
     t   = diffusion_time;
     AtL = decomposition(A+t*L + 0.0001*speye(row(P)));
 end
+if( isempty(i) && ~isempty(ID) )
+    i = ID;
+end
 delete(Pi);
 
 if( ~isempty(event) )
-    x = find_closest_vertex(P,event.IntersectionPoint);
+    x = knnsearch(KDTree,event.IntersectionPoint,'K',1);
     if(ismember(x,i))
         i = setdiff(i,x);
     else
@@ -62,9 +91,4 @@ else
     object.FaceColor       = 'interp';
     object.FaceVertexCData = u;
 end
-end
-
-function [i] = find_closest_vertex(P,q)
-D = vecnorm3(P-q);
-[~,i] = min(D);
 end

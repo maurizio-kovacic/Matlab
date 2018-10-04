@@ -1,16 +1,38 @@
-function HarmonicFieldViewer3D(P,N,T)
+function [U] = HarmonicFieldViewer3D(P,N,T)
+U = [];
 L = cotangent_Laplacian(P,T);
-CreateViewer3D('Name','Harmonic Field Viewer','right');
-fig = display_mesh(P,N,T,[0.5 0.5 0.5]);
+fig  = CreateViewer3D('Name','Harmonic Field Viewer','right');
+mesh = display_mesh(P,N,T,[0.5 0.5 0.5]);
 cmap('parula',[],true);
-fig.HandleVisibility = 'off';
-set(fig,'ButtonDownFcn',@(object,event) harmonic_field(object,event,P,L));
+mesh.HandleVisibility = 'off';
+set(mesh,'ButtonDownFcn',@(object,event) harmonic_field(object,event,P,L));
+run = true;
+while( run )
+    if( ~isvalid(fig) )
+        return;
+    end
+    char = get(fig, 'CurrentCharacter');
+    if( char == 13 )
+        run = false;
+    end
+    drawnow;
+end
+U = harmonic_field();
 end
 
-function harmonic_field(object,event,P,L)
+function [U] = harmonic_field(object,event,P,L)
+persistent KDTree;
 persistent i j;
 persistent Pi Pj;
-x = find_closest_vertex(P,event.IntersectionPoint);
+if(nargin==0)
+    U = object.FaceVertexCData;
+    clear i j Pi Pj;
+    return;
+end
+if( isempty(KDTree) )
+    KDTree = KDTreeSearcher(P);
+end
+x = knnsearch(KDTree,event.IntersectionPoint,'K',1);
 if strcmpi(get(get_patch_figure(object),'SelectionType'),'alt')
     if(ismember(x,j))
         j = setdiff(j,x);
@@ -38,15 +60,10 @@ else
     M = add_constraints(L,[i;j],[]);
     k = zeros(row(P),1);
     k(i) = 1;
-    u = M\k;
+    U = M\k;
     object.FaceColor       = 'interp';
-    object.FaceVertexCData = u;
+    object.FaceVertexCData = U;
 end
-end
-
-function [i] = find_closest_vertex(P,q)
-D = vecnorm3(P-q);
-[~,i] = min(D);
 end
 
 function [h] = get_patch_figure(object)

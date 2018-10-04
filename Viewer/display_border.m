@@ -12,7 +12,7 @@ if( size(ID,2) == 1 )
     i = find(tf(E(:,1))&tf(E(:,2)));
     h = line3( [P(E(i,1),:) P(E(i,2),:)], varargin{1:end} );
 else
-    h = line3( [P(ID(:,1),:) P(ID(:,2),:)], varargin{1:end} );
+    h = line3( [P(ID(:,1),:) P(ID(:,2),:    )], varargin{1:end} );
 end
 
 end

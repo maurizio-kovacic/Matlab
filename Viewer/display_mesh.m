@@ -1,15 +1,12 @@
 function [ fig ] = display_mesh( P, N, T, C, primitiveMode, M, varargin )
-if( nargin < 6 )
-    M = Material([0.5 0.5 0.5],1,0.3,0.6,0.3,100,0.5);
+if( nargin < 6 || isempty(M) )
+    M = Material([1 1 1],1,0.3,0.6,0.3,100,0.5);
 end
-if( nargin < 5 )
+if( nargin < 5 || isempty(primitiveMode) )
     primitiveMode = 'face'; % point/vertex, wireframe, wired, face/solid
 end
 if( isempty(T) )
     primitiveMode = 'vertex';
-end
-if( isempty(primitiveMode) )
-    primitiveMode = 'face';
 end
 
 primitiveMode = lower(primitiveMode);
@@ -53,29 +50,29 @@ if( ~isempty(C) )
         C = double(C);
     end
     C(~isfinite(C)) = NaN;
-    A = ones(size(C,1),1);
-    if( size(C,2) == 4 )
+    A = ones(row(C),1);
+    if( col(C) == 4 )
         A = C(:,4);
     end
-    if( ( size(C,1) == 1 ) )
+    if( ( row(C) == 1 ) )
         fig.FaceColor = C(1:3);
         fig.FaceAlpha = A;
     else
-        if( size(C,2) == 1 )
+        if( col(C) == 1 )
             fig.FaceVertexCData = C;
         else
             fig.FaceVertexCData = C(:,1:3);
         end
         fig.FaceAlpha = 1;
-        if( size(C,1) == size(T,1) )
+        if( row(C) == row(T) )
             fig.FaceColor = 'flat';
-            if( size(C,2) > 3 )
+            if( col(C) > 3 )
                 fig.FaceAlpha = 'flat';
                 fig.FaceVertexAlphaData = A;
             end
         else
             fig.FaceColor = 'interp';
-            if( size(C,2) > 3 )
+            if( col(C) > 3 )
                 fig.FaceAlpha = 'interp';
                 fig.FaceVertexAlphaData = A;
             end
