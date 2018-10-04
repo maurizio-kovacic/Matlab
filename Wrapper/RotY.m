@@ -1,3 +1,6 @@
-function [R] = RotY(theta)
-R = [ cos(theta) 0 -sin(theta) 0 0 1 0 0 sin(theta) 0 cos(theta) 0 ];
+function [R] = RotY(theta,type)
+if( nargin < 2 )
+    type = 'linear';
+end
+R = RUt([0 1 0],theta,type);
 end

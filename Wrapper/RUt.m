@@ -1,5 +1,9 @@
-function [R] = RUt(U,theta)
-R = [cos(theta)+U(:,1).^2.*(1-cos(theta)) , U(:,1).*U(:,2).*(1-cos(theta))-U(:,3).*sin(theta) , U(:,1).*U(:,3).*(1-cos(theta))+U(:,2).*sin(theta),...
-     U(:,1).*U(:,2).*(1-cos(theta))-U(:,3).*sin(theta) , cos(theta)+U(:,2).^2.*(1-cos(theta)) , U(:,2).*U(:,3).*(1-cos(theta))-U(:,1).*sin(theta),...
-     U(:,3).*U(:,1).*(1-cos(theta))-U(:,2).*sin(theta) , U(:,3).*U(:,2).*(1-cos(theta))+U(:,1).*sin(theta) , cos(theta)+U(:,3).^2.*(1-cos(theta))];
+function [R] = RUt(U,theta,type)
+R = [axang2rotm([U,theta]),[0;0;0];[0 0 0 1]];
+if( nargin < 3 )
+    type = 'linear';
+end
+if( strcmpi(type,'linear') )
+    R = mat2lin(R);
+end
 end

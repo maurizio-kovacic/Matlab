@@ -1,3 +1,11 @@
-function [R] = Rot2(theta) 
-R = [ cos(theta) -sin(theta) 0 sin(theta) cos(theta) 0 0 0 1 ];
+function [R] = Rot2(theta,type)
+if( nargin < 2 )
+    type = 'linear';
+end
+R = RotZ(theta,type);
+if( strcmpi(type,'linear') )
+    R = R(1:6);
+else
+    R = R(1:3,1:3);
+end
 end

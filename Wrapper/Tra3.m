@@ -1,3 +1,9 @@
-function [T] = Tra3(trans)
-T = [ 1 0 0 trans(1) 0 1 0 trans(2) 0 0 1 trans(3) ];
+function [T] = Tra3(t,type)
+T = [eye(4,3),[t,1]'];
+if( nargin < 2 )
+    type = 'linear';
+end
+if( strcmpi(type,'linear') )
+    T = linearize_transformation_matrix(T);
+end
 end

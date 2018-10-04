@@ -1,3 +1,9 @@
-function [S] = Sca3(scale)
-S = [ scale(1) 0 0 0 0 scale(2) 0 0 0 0 scale(3) 0 ];
+function [S] = Sca3(scale,type)
+S = diag([scale,1]);
+if( nargin < 2 )
+    type = 'linear';
+end
+if( strcmpi(type,'linear') )
+    S = linearize_transformation_matrix(S);
+end
 end

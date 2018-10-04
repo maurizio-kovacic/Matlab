@@ -1,3 +1,9 @@
-function [S] = Sca2(s) 
-S = [s(1) 0 0 0 s(2) 0 0 0 1 ];
+function [S] = Sca2(scale,type)
+S = diag([scale,1]); 
+if( nargin < 2 )
+    type = 'linear';
+end
+if( strcmpi(type,'linear') )
+    S = linearize_transformation_matrix(S);
+end
 end

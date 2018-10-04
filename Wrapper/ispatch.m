@@ -1,3 +1,3 @@
-function tf = ispatch(h)
-   tf = strcmp(get(h, 'type'), 'patch');
+function [tf] = ispatch(h)
+    tf = arrayfun(@(hh) isa(hh,'matlab.graphics.primitive.Patch'),h);
 end

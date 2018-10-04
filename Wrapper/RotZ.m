@@ -1,3 +1,6 @@
-function [R] = RotZ(theta)
-R = [ cos(theta) -sin(theta) 0 0 sin(theta) cos(theta) 0 0 0 0 1 0 ];
+function [R] = RotZ(theta,type)
+if( nargin < 2 )
+    type = 'linear';
+end
+R = RUt([0 0 1],theta,type);
 end

@@ -1,3 +1,3 @@
 function [txt] = capital(txt)
-txt = [upper(txt),txt(2:end)]
+txt = strcat(upper(txt(1)),lower(txt(2:end)));
 end

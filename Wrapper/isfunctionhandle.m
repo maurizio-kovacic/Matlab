@@ -1,3 +1,3 @@
 function [tf] = isfunctionhandle(h)
-tf = isa(h,'function_handle');
+    tf = arrayfun(@(hh) isa(hh,'function_handle'),h);
 end
