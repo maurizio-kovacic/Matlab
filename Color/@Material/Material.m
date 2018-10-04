@@ -87,9 +87,5 @@ classdef Material
                             3,...
                             1);
         end
-        
-        
-        
-        
     end
 end

@@ -5,6 +5,9 @@ end
 if( nargin < 3 )
     Saturation = 0.5;
 end
+if( row(ID)==1 )
+    ID = ID';
+end
 Saturation = repmat(Saturation,numel(ID),1);
 Value      = repmat(Value,numel(ID),1);
 

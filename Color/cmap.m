@@ -9,11 +9,16 @@ if( nargin < 2 )
     CRes = 64;
 end
 if( ischar(CData) || isstring(CData) )
-    p = color_palette(CData);
-    if(~isempty(p))
-        CData = p;
-    else
-        CData = colormap(CData);
+    if( strcmpi('implicit',CData) )
+        CData   = implicit_field_color(CRes);
+        isoline = false;
+    else    
+        p = color_palette(CData);
+        if(~isempty(p))
+            CData = p;
+        else
+            CData = colormap(CData);
+        end
     end
 end
 C = colormap(clamp(color_ramp(CData,CRes,isoline,CIso,varargin{:}),0,1));
