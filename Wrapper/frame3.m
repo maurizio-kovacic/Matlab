@@ -11,6 +11,12 @@ end
 if( nargin < 3 )
     V = [];
 end
+if(nargin==0)
+    P = [0 0 0];
+    U = [1 0 0];
+    V = [0 1 0];
+    W = [0 0 1];
+end
 type = regexprep(type,'[^uvw]','');
 if( strcmp( type, '' ) )
     type = 'uvw';
