@@ -6,17 +6,17 @@ else
 end
 fig = figure('Name','Viewer 3D','NumberTitle','off',varargin{1:end-1});
 ax = figure_linear_gradient(fig);
+% ax = figure_radial_gradient(fig);
 uistack(ax,'bottom');
 ax  = CreateAxes3D();
-% if( ~isempty(pos) )
-    set(fig,'WindowButtonMotionFcn',@(obj,event) update(obj,event,pos));
-    set(fig,'WindowButtonDownFcn',@(obj,event) update(obj,event,pos));
-    set(fig,'WindowButtonUpFcn',@(obj,event) update(obj,event,pos));
-    set(fig,'WindowScrollWheelFcn',@(obj,event) update(obj,event,pos));
-    update_light(fig,pos);
-% end
+
+set(fig,'WindowButtonMotionFcn',@(obj,event) update(obj,event,pos));
+set(fig,'WindowButtonDownFcn',@(obj,event) update(obj,event,pos));
+set(fig,'WindowButtonUpFcn',@(obj,event) update(obj,event,pos));
+set(fig,'WindowScrollWheelFcn',@(obj,event) update(obj,event,pos));
+update_light(fig,pos);
+
 set(fig,'KeyPressFcn',@KeyEventHandler);
-% rotate3d on;
 if( nargout >= 2 )
     varargout{1} = ax;
 end

@@ -33,7 +33,7 @@ if( isempty(KDTree) )
     KDTree = KDTreeSearcher(P);
 end
 x = knnsearch(KDTree,event.IntersectionPoint,'K',1);
-if strcmpi(get(get_patch_figure(object),'SelectionType'),'alt')
+if strcmpi(get(get_patch(object),'SelectionType'),'alt')
     if(ismember(x,j))
         j = setdiff(j,x);
     else
@@ -64,8 +64,4 @@ else
     object.FaceColor       = 'interp';
     object.FaceVertexCData = U;
 end
-end
-
-function [h] = get_patch_figure(object)
-h = get(get(object,'Parent'),'Parent');
 end

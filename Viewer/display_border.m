@@ -1,18 +1,16 @@
 function [h] = display_border(P,T,ID,varargin)
-if( size(ID,2) == 1 )
-    I = T(:,1);
-    J = T(:,2);
-    K = T(:,3);
-
+if( col(ID) == 1 )
+    [I,J,K] = tri2ind(T);
     tf = false(size(P,1),1);
     tf(ID) = true;
-
     E = [I J; J K; K I];
     E = unique(sort(E,2),'rows');
     i = find(tf(E(:,1))&tf(E(:,2)));
-    h = line3( [P(E(i,1),:) P(E(i,2),:)], varargin{1:end} );
+    j = E(i,2);
+    i = E(i,1);
 else
-    h = line3( [P(ID(:,1),:) P(ID(:,2),:    )], varargin{1:end} );
+    i = ID(:,1);
+    j = ID(:,2);
 end
-
+    h = line3( [P(i,:) P(j,:)], varargin{1:end} );
 end
